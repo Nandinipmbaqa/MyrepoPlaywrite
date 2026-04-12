@@ -1,0 +1,33 @@
+import { test, expect } from '@playwright/test';
+
+test('test', async ({ page }) => {
+  await page.goto('https://todomvc.com/examples/react/dist/');
+  await page.getByTestId('text-input').click();
+  await page.getByTestId('text-input').fill('bread');
+  await page.getByTestId('text-input').press('Enter');
+  await page.getByTestId('text-input').fill('milk');
+  await page.getByTestId('text-input').press('Enter');
+  await page.getByTestId('text-input').fill('egg');
+  await page.getByTestId('text-input').press('Enter');
+  await page.getByTestId('text-input').fill('butter');
+  await page.getByTestId('text-input').press('Enter');
+  await page.getByTestId('text-input').fill('oil');
+  await page.getByTestId('text-input').press('Enter');
+  await page.getByRole('listitem').filter({ hasText: 'egg' }).getByTestId('todo-item-toggle').check();
+  await page.getByRole('listitem').filter({ hasText: 'bread' }).getByTestId('todo-item-toggle').check();
+  await page.getByRole('listitem').filter({ hasText: 'butter' }).getByTestId('todo-item-toggle').check();
+  await page.getByRole('link', { name: 'Completed' }).click();
+  await expect(page.getByText('bread')).toBeVisible();
+  await expect(page.getByTestId('todo-list')).toContainText('egg');
+  await expect(page.getByText('butter')).toBeVisible();
+  await page.getByRole('link', { name: 'Active' }).click();
+  await expect(page.getByTestId('todo-list')).toMatchAriaSnapshot(`- text: milk`);
+  await page.getByRole('link', { name: 'Completed' }).click();
+  await page.locator('html').click();
+  await expect(page.getByRole('listitem').filter({ hasText: 'bread' }).getByTestId('todo-item-toggle')).toBeChecked();
+  await expect(page.getByRole('listitem').filter({ hasText: 'egg' }).getByTestId('todo-item-toggle')).toBeChecked();
+  await expect(page.getByRole('listitem').filter({ hasText: 'butter' }).getByTestId('todo-item-toggle')).toBeChecked();
+  await page.getByRole('link', { name: 'Active' }).click();
+  await expect(page.getByRole('listitem').filter({ hasText: 'milk' }).getByTestId('todo-item-toggle')).not.toBeChecked();
+  await expect(page.getByRole('listitem').filter({ hasText: 'oil' }).getByTestId('todo-item-toggle')).not.toBeChecked();
+});
