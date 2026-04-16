@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-
+//this is AI generated code
 test('complete purchase', async ({ page }) => {
   await page.goto('https://app.appinio.com/checkout');
 
